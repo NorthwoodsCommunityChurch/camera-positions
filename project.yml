@@ -1,0 +1,35 @@
+name: CameraPositions
+options:
+  bundleIdPrefix: com.northwoods
+  deploymentTarget:
+    macOS: "14.0"
+  xcodeVersion: "16.0"
+  minimumXcodeGenVersion: "2.38.0"
+
+packages:
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle
+    from: 2.0.0
+
+targets:
+  CameraPositions:
+    type: application
+    platform: macOS
+    sources:
+      - CameraPositions
+    resources:
+      - CameraPositions/Resources/Assets.xcassets
+      - path: CameraPositions/Resources/Web
+        type: folder
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.northwoods.CameraPositions
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PROJECT_VERSION: 1
+        INFOPLIST_FILE: CameraPositions/Info.plist
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGN_STYLE: Manual
+        ENABLE_APP_SANDBOX: NO
+        SWIFT_VERSION: "5.9"
+    dependencies:
+      - package: Sparkle

@@ -1,0 +1,183 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+}
+
+/* Clock bar at the top */
+.clock-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    text-align: center;
+    padding: 0.5rem 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), transparent);
+    pointer-events: none;
+}
+
+.clock-time {
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.05em;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+}
+
+/* Full-width row of columns */
+.cameras-row {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+
+/* Waiting state */
+.waiting {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.waiting p {
+    font-size: 1.5rem;
+    color: #555;
+}
+
+.waiting .hint {
+    font-size: 1rem;
+    color: #333;
+    margin-top: 0.5rem;
+}
+
+/* Each camera column */
+.camera-col {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.camera-col:last-child {
+    border-right: none;
+}
+
+/* Angle photo fills entire column */
+.camera-col .angle-photo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+/* Dark overlay so text is readable on photos */
+.camera-col .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.2) 0%,
+        rgba(0, 0, 0, 0.1) 30%,
+        rgba(0, 0, 0, 0.1) 60%,
+        rgba(0, 0, 0, 0.6) 100%
+    );
+    z-index: 1;
+}
+
+/* No-photo background */
+.camera-col.no-photo {
+    background: linear-gradient(180deg, #111 0%, #0a0a0a 100%);
+}
+
+/* All text content sits above the photo */
+.camera-col .content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    height: 100%;
+    padding: 1.5rem 1rem;
+}
+
+/* Camera number + label — always dead center of the column */
+.center-group {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.cam-number {
+    font-size: clamp(4rem, 10vw, 8rem);
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.7);
+}
+
+/* Camera label under the number */
+.cam-label {
+    font-size: clamp(0.8rem, 1.5vw, 1.1rem);
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+    margin-top: 0.25rem;
+}
+
+/* Bottom section: lenses + name */
+.bottom-info {
+    width: 100%;
+    text-align: center;
+    padding-bottom: 0.5rem;
+}
+
+/* Lenses listed above the name */
+.lens-list {
+    margin-bottom: 0.75rem;
+}
+
+.lens-name {
+    font-size: clamp(1.2rem, 2vw, 1.8rem);
+    color: rgba(255, 255, 255, 0.85);
+    padding: 0.2rem 0;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+}
+
+/* Operator name at the very bottom */
+.operator-name {
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+}
+
+.operator-empty {
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    color: rgba(255, 255, 255, 0.2);
+    font-style: italic;
+}
