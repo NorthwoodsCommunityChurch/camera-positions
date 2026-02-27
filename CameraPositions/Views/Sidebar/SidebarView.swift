@@ -5,6 +5,7 @@ struct SidebarView: View {
     @State private var newMemberName = ""
     @State private var showingAddMember = false
     @State private var showingPCOLogin = false
+    @State private var showingESP32Settings = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -88,8 +89,15 @@ struct SidebarView: View {
                 }
             }
             .frame(maxHeight: .infinity)
+            Divider()
+
+            // ESP32 OLED displays
+            esp32Section
         }
         .background(.background)
+        .sheet(isPresented: $showingESP32Settings) {
+            ESP32SettingsSheet(viewModel: viewModel)
+        }
         .alert("Add Team Member", isPresented: $showingAddMember) {
             TextField("Name", text: $newMemberName)
             Button("Add") {
@@ -102,6 +110,61 @@ struct SidebarView: View {
                 newMemberName = ""
             }
         }
+    }
+
+    // MARK: - ESP32 Displays
+
+    @ViewBuilder
+    private var esp32Section: some View {
+        Button {
+            showingESP32Settings = true
+        } label: {
+            HStack(spacing: 8) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(
+                            viewModel.esp32DisplayService.connections.isEmpty
+                                ? Color.secondary.opacity(0.2)
+                                : Color(hex: "02528A").opacity(0.8)
+                        )
+                        .frame(width: 32, height: 32)
+
+                    Image(systemName: "tv.badge.wifi")
+                        .font(.system(size: 14))
+                        .foregroundStyle(
+                            viewModel.esp32DisplayService.connections.isEmpty
+                                ? Color.secondary
+                                : Color.white
+                        )
+                }
+
+                VStack(alignment: .leading, spacing: 1) {
+                    Text("ESP32 Displays")
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.primary)
+
+                    let count = viewModel.esp32DisplayService.connections.count
+                    Text(count == 0 ? "Not configured" : "\(count) device\(count == 1 ? "" : "s") configured")
+                        .font(.caption2)
+                        .foregroundStyle(count == 0 ? Color.secondary : Color.accentColor)
+                }
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+            }
+            .padding(8)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(.quaternary.opacity(0.5))
+            )
+        }
+        .buttonStyle(.plain)
+        .padding(.horizontal, 8)
+        .padding(.vertical, 8)
     }
 
     // MARK: - PCO Connection

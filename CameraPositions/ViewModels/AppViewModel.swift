@@ -29,6 +29,7 @@ final class AppViewModel {
     let displayServer: DisplayServer
     let pcoAuth: PCOAuthService
     let pcoAPI: PCOAPIClient
+    let esp32DisplayService: ESP32DisplayService
 
     // PCO configuration
     var selectedServiceTypeId: String? {
@@ -50,6 +51,7 @@ final class AppViewModel {
         self.displayServer = DisplayServer(persistence: persistence, imageStorage: imageStorage)
         self.pcoAuth = pcoAuth
         self.pcoAPI = PCOAPIClient(authService: pcoAuth)
+        self.esp32DisplayService = ESP32DisplayService()
         self.selectedServiceTypeId = UserDefaults.standard.string(forKey: "pco_service_type_id")
         self.selectedTeamId = UserDefaults.standard.string(forKey: "pco_team_id")
     }
@@ -267,7 +269,8 @@ final class AppViewModel {
 
     // MARK: - Auto Publish
 
-    /// Saves and publishes to the web display on every change
+    /// Saves and publishes to the web display on every change.
+    /// Also pushes assignment data to any configured ESP32 OLED displays.
     func autoPublish() {
         guard var weekend = selectedWeekend,
               let weekendIndex = weekends.firstIndex(where: { $0.id == weekend.id }) else { return }
@@ -278,8 +281,16 @@ final class AppViewModel {
 
         let display = buildPublishedDisplay(from: weekend)
         persistence.savePublishedDisplay(display)
+        esp32DisplayService.push(display: display)
 
         logger.info("Auto-published display")
+    }
+
+    /// Manually re-pushes current assignments to all configured ESP32 displays.
+    func pushToESP32Displays() {
+        if let display = persistence.loadPublishedDisplay() {
+            esp32DisplayService.push(display: display)
+        }
     }
 
     private func buildPublishedDisplay(from weekend: WeekendConfig) -> PublishedDisplay {

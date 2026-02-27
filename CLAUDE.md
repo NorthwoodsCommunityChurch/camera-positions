@@ -28,6 +28,14 @@ Displays camera operator assignments (name, camera number, lenses) on a monitor 
 - `CameraPositions/Services/Web/DisplayServer.swift` — NWListener HTTP server
 - `CameraPositions/Services/Web/HTTPTypes.swift` — HTTP request/response types
 - `CameraPositions/Services/PlanningCenter/` — OAuth, API client, token storage, config
+- `CameraPositions/Services/ESP32DisplayService.swift` — pushes assignments to ESP32 OLED boards
+
+### ESP32 OLED Integration
+- `ESP32Connection` struct: maps a camera number → ESP32 IP address; stored in UserDefaults
+- `ESP32DisplayService.push(display:)` is called in `autoPublish()` — fires-and-forgets HTTP POSTs
+- Each ESP32 receives `POST /api/display` with `{"operator": "...", "lens": "..."}` JSON
+- Settings UI: sidebar → "ESP32 Displays" button → `ESP32SettingsSheet` (add/remove IP+camera pairs)
+- ESP32 firmware: `CAMERA_NUMBER` define (0 = unset); OLED rows: cam#/tally, operator, lens, status
 
 ### Web Display
 - `CameraPositions/Resources/Web/index.html` — display page structure

@@ -150,6 +150,9 @@ final class DisplayServer {
         case ("GET", "/api/config"):
             response = serveConfig()
 
+        case ("GET", "/api/assignments"):
+            response = serveAssignments()
+
         case let ("GET", path) where path.hasPrefix("/api/images/"):
             let filename = String(path.dropFirst("/api/images/".count))
             response = serveImage(filename: filename)
@@ -195,6 +198,39 @@ final class DisplayServer {
 
         // No published config yet
         return .ok(body: "{}", contentType: "application/json")
+    }
+
+    private func serveAssignments() -> HTTPResponse {
+        struct CameraAssignment: Encodable {
+            let number: Int
+            let operatorName: String?
+            let lenses: [String]
+
+            enum CodingKeys: String, CodingKey {
+                case number
+                case operatorName = "operator"
+                case lenses
+            }
+        }
+
+        let cameras: [CameraAssignment]
+        if let display = persistence.loadPublishedDisplay() {
+            cameras = display.cameras.map { cam in
+                CameraAssignment(
+                    number: cam.number,
+                    operatorName: cam.operatorName,
+                    lenses: cam.lenses.map { $0.name }
+                )
+            }
+        } else {
+            cameras = []
+        }
+
+        let encoder = JSONEncoder()
+        if let data = try? encoder.encode(cameras) {
+            return .ok(data: data, contentType: "application/json")
+        }
+        return .ok(body: "[]", contentType: "application/json")
     }
 
     private func serveImage(filename: String) -> HTTPResponse {
