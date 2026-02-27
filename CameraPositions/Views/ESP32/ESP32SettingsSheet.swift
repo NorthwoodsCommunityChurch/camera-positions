@@ -104,7 +104,7 @@ struct ESP32SettingsSheet: View {
                             .font(.caption)
                     }
                     .buttonStyle(.plain)
-                    .foregroundStyle(.accentColor)
+                    .foregroundStyle(Color.accentColor)
 
                     Spacer()
 
