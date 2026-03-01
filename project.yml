@@ -24,8 +24,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.northwoods.CameraPositions
-        MARKETING_VERSION: "1.0.4"
-        CURRENT_PROJECT_VERSION: 5
+        MARKETING_VERSION: "1.0.5"
+        CURRENT_PROJECT_VERSION: 6
         INFOPLIST_FILE: CameraPositions/Info.plist
         CODE_SIGN_IDENTITY: "-"
         CODE_SIGN_STYLE: Manual

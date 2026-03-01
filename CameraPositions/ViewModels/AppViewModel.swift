@@ -157,6 +157,13 @@ final class AppViewModel {
         autoPublish()
     }
 
+    func toggleCameraDisabled(_ id: UUID) {
+        guard let index = cameraPositions.firstIndex(where: { $0.id == id }) else { return }
+        cameraPositions[index].isDisabled.toggle()
+        persistence.saveCameraPositions(cameraPositions)
+        autoPublish()
+    }
+
     func updateCameraPositionLabel(_ id: UUID, label: String?) {
         guard let index = cameraPositions.firstIndex(where: { $0.id == id }) else { return }
         cameraPositions[index].label = label
@@ -294,7 +301,7 @@ final class AppViewModel {
     }
 
     private func buildPublishedDisplay(from weekend: WeekendConfig) -> PublishedDisplay {
-        let displayCameras = cameraPositions.map { position -> PublishedDisplay.DisplayCamera in
+        let displayCameras = cameraPositions.filter { !$0.isDisabled }.map { position -> PublishedDisplay.DisplayCamera in
             let assignment = workingAssignments.first { $0.cameraPositionId == position.id }
             let displayLenses = (assignment?.lensIds ?? []).compactMap { lensId -> PublishedDisplay.DisplayLens? in
                 guard let lens = lenses.first(where: { $0.id == lensId }) else { return nil }

@@ -51,15 +51,32 @@ struct CameraColumnView: View {
 
             Spacer(minLength: 0)
 
-            // Remove button
-            Button(role: .destructive) {
-                viewModel.removeCameraPosition(position.id)
-            } label: {
-                Image(systemName: "minus.circle")
-                    .font(.caption)
+            // Footer buttons
+            HStack(spacing: 12) {
+                // Disable/enable toggle
+                Button {
+                    viewModel.toggleCameraDisabled(position.id)
+                } label: {
+                    Image(systemName: position.isDisabled ? "eye.slash" : "eye")
+                        .font(.caption)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(position.isDisabled ? Color.orange : Color.secondary)
+                .help(position.isDisabled ? "Enable camera (show on web display)" : "Disable camera (hide from web display)")
+
+                Spacer()
+
+                // Remove button
+                Button(role: .destructive) {
+                    viewModel.removeCameraPosition(position.id)
+                } label: {
+                    Image(systemName: "minus.circle")
+                        .font(.caption)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(.secondary)
             }
-            .buttonStyle(.plain)
-            .foregroundStyle(.secondary)
+            .padding(.horizontal, 12)
             .padding(.bottom, 8)
         }
         .frame(width: 180)
@@ -72,7 +89,9 @@ struct CameraColumnView: View {
                     lineWidth: isDropTargeted ? 2 : 1
                 )
         )
+        .opacity(position.isDisabled ? 0.45 : 1.0)
         .dropDestination(for: String.self) { items, _ in
+            guard !position.isDisabled else { return false }
             guard let value = items.first else { return false }
             if let lensId = UUID(uuidString: value) {
                 // It's a lens UUID

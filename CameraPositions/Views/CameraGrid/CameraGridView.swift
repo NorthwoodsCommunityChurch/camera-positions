@@ -42,7 +42,7 @@ struct CameraGridView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                ScrollView(.horizontal, showsIndicators: false) {
+                ScrollView(.horizontal) {
                     HStack(alignment: .top, spacing: 16) {
                         ForEach(viewModel.cameraPositions) { position in
                             CameraColumnView(
