@@ -373,6 +373,16 @@ final class AppViewModel {
         }
     }
 
+    func refreshWeekends() async {
+        guard pcoAuth.isAuthenticated else { return }
+
+        // Remove past weekends (more than 1 day old) that came from PCO
+        let cutoff = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
+        weekends.removeAll { $0.pcoServicePlanId != nil && $0.serviceDate < cutoff }
+
+        await loadPCOWeekends()
+    }
+
     func loadPCOWeekends() async {
         guard let stId = selectedServiceTypeId else { return }
 

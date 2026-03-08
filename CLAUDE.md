@@ -1,5 +1,9 @@
 # Camera Positions
 
+## Security
+
+See [SECURITY.md](SECURITY.md) for security findings from the 2026-03-01 review.
+
 ## Purpose
 Displays camera operator assignments (name, camera number, lenses) on a monitor near the camera prep area. Admin configures via SwiftUI app; camera ops view via web browser.
 

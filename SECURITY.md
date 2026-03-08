@@ -1,4 +1,44 @@
-# Security
+# Security Findings - Camera Positions
+
+**Review Date**: 2026-03-01
+**Reviewer**: Claude Security Review (Clara)
+**Severity Summary**: 0 Critical, 0 High, 1 Medium, 1 Low
+
+## Findings
+
+| ID | Severity | Finding | File | Line | Status |
+|----|----------|---------|------|------|--------|
+| CP-01 | MEDIUM | HTTP server exposes team member names and photos without authentication | DisplayServer.swift | - | Open |
+| CP-02 | LOW | No HTTPS on local HTTP server | DisplayServer.swift | - | Open |
+
+## Detailed Findings
+
+### CP-01 [MEDIUM] HTTP server exposes team member names and photos without authentication
+
+**Location**: DisplayServer.swift (port 8080)
+**Description**: The NWListener HTTP server serves position assignments, team member names, and person photos to any device on the local network without authentication. Endpoints include `/api/config` (JSON with all assignments) and `/api/images/{filename}` (person photos).
+**Impact**: Any device on the local network can view team member names, lens assignments, and photos. This is by design for the web display use case, but exposes personal information.
+**Remediation**: This is documented as intentional behavior. Image filenames are properly sanitized with UUID naming, and hidden files are rejected. Consider adding optional authentication for environments where network access is less controlled.
+
+### CP-02 [LOW] No HTTPS on local HTTP server
+
+**Location**: DisplayServer.swift (port 8080)
+**Description**: The web display server uses plain HTTP. Data (including person photos) is transmitted unencrypted on the local network.
+**Impact**: On a trusted local network, this is acceptable. On a shared or untrusted network, images and names could be intercepted.
+**Remediation**: No action needed for a trusted production network. Consider TLS if deployed in a less controlled environment.
+
+## Security Posture Assessment
+
+**Overall Risk: LOW**
+
+Camera Positions has a good security posture. Credentials are stored in the macOS Keychain (not in code or UserDefaults), image filenames are sanitized to prevent directory traversal, and the HTTP server is read-only. The app follows Apple platform security best practices for credential handling. The primary exposure is the intentionally unauthenticated HTTP display server.
+
+## Remediation Priority
+
+1. CP-01 - Document security implications (already done below)
+2. CP-02 - No action needed for trusted LAN
+
+---
 
 ## Network Server
 

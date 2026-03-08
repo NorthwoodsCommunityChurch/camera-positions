@@ -16,12 +16,27 @@ struct SidebarView: View {
 
             // Weekends section
             VStack(alignment: .leading, spacing: 4) {
-                Text("WEEKENDS")
-                    .font(.caption)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, 12)
-                    .padding(.top, 8)
+                HStack {
+                    Text("WEEKENDS")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.secondary)
+
+                    Spacer()
+
+                    if viewModel.pcoAuth.isAuthenticated {
+                        Button {
+                            Task { await viewModel.refreshWeekends() }
+                        } label: {
+                            Image(systemName: "arrow.clockwise")
+                                .font(.caption)
+                        }
+                        .buttonStyle(.plain)
+                        .help("Refresh weekends from Planning Center")
+                    }
+                }
+                .padding(.horizontal, 12)
+                .padding(.top, 8)
 
                 List(viewModel.weekends, selection: $viewModel.selectedWeekendId) { weekend in
                     WeekendRow(weekend: weekend, isSelected: viewModel.selectedWeekendId == weekend.id)
