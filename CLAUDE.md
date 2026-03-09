@@ -64,6 +64,10 @@ Displays camera operator assignments (name, camera number, lenses) on a monitor 
 3. Click "Connect Planning Center" in sidebar
 4. Select camera team from picker
 
+## TODO
+
+- [x] Update app icon and push to git (new icon generated 2026-03-08 via ChatGPT DALL-E — camera aperture with orange orbit arc, dark navy squircle)
+
 ## Known Patterns
 - `Color.accentColor` must be explicit in `.foregroundStyle()` (SwiftUI type inference issue)
 - `lazy` doesn't work in `@Observable` classes — use init pattern instead
